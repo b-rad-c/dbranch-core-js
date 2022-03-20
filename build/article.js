@@ -1,11 +1,6 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import ReactQuill from 'react-quill';
-
-require('react-dom');
-
-window.React2 = require('react');
-console.log('*** DUPE TEST core', window.React1 === window.React2);
 export class Article {
   constructor(type, title, subTitle, author, contents) {
     this.type = type ? type : 'news';
