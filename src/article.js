@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal } from 'react-bootstrap'
+import { Modal, Card, Stack } from 'react-bootstrap'
 import ReactQuill from 'react-quill'
 
 
@@ -77,5 +77,39 @@ export function ArticleReaderModal(props) {
             
             </Modal.Body>
       </Modal>
+    )
+}
+
+export function ArticleList(props) {
+    return (
+        <Stack className='article-list' gap={props.gap ? props.gap : 0}>
+            {
+                props.articles.map((article, index) => <ArticleListItem key={index} 
+                                                                        theme={props.theme} 
+                                                                        listIndex={index}
+                                                                        onItemClick={props.onItemClick} 
+                                                                        article={article} />)
+            }
+        </Stack>
+    )
+}
+
+export function ArticleListItem(props) {
+    const defaultClass = 'article-list-item' 
+    const cardClass = props.theme ?  'article-list-item ' + props.theme : defaultClass
+    const clickHandler = (e) => {
+        e.preventDefault()
+        return props.onItemClick(props.listIndex)
+    }
+    return (
+        <Card className={cardClass} onClick={clickHandler}>
+            <Card.Body>
+                <Card.Subtitle className='article-list-item-title'>{props.article.title}</Card.Subtitle>
+                <Card.Subtitle className='article-list-item-subtitle'>{props.article.subTitle}</Card.Subtitle>
+                <Card.Text className='article-list-item-byline'>
+                    {props.article.type} written by {props.article.author}
+                </Card.Text>
+            </Card.Body>
+        </Card>
     )
 }
