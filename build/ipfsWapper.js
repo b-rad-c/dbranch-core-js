@@ -18,7 +18,7 @@ export async function loadArticleFromIPFS(client, path) {
 }
 export function formatPubSubMsg(response) {
   return {
-    text: utf8decoder.decode(response)
+    text: utf8decoder.decode(response.data)
   };
 }
 export async function listDir(client, path) {
