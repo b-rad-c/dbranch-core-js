@@ -7,8 +7,6 @@ import { Article } from './article';
 
 const utf8decoder = new TextDecoder()
 
-export function testIPFSConnection(host) { return create(host).version() }
-
 export async function loadArticleFromIPFS(client, path) {
     let result = ''
     for await (const chunk of client.files.read(path)) {
