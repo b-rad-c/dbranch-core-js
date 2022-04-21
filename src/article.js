@@ -3,6 +3,9 @@ import { Modal, Card, Stack } from 'react-bootstrap'
 import ReactQuill from 'react-quill'
 
 
+
+
+
 export class Article {
     constructor(type, title, subTitle, author, contents) {
         this.type = type ? type : 'news'
@@ -17,7 +20,7 @@ export class Article {
             metadata: {
                 type: this.type,
                 title: this.title,
-                subTitle: this.subTitle,
+                sub_title: this.subTitle,
                 author: this.author,
             },
             contents: this.contents
@@ -29,7 +32,7 @@ export class Article {
     }
 
     static fromJSON(data) {
-        return new Article(data.metadata.type, data.metadata.title, data.metadata.subTitle, data.metadata.author, data.contents)
+        return new Article(data.metadata.type, data.metadata.title, data.metadata.sub_title, data.metadata.author, data.contents)
     }
 
     static fromJSONString(jsonString) {
@@ -37,7 +40,13 @@ export class Article {
     }
 }
 
-
+export function CardanoExplorerLink(transactionId) {
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
+    } else {
+        return 'https://explorer.cardano.org/en/transaction?id=' + transactionId
+    }
+}
 export function ArticleReader(props) {
     return (
         <div className='article-reader-container'>
@@ -45,9 +54,11 @@ export function ArticleReader(props) {
                 <h1 className='article-reader-title'>{props.article.title}</h1>
                 <h2 className='article-reader-subtitle'>{props.article.subTitle}</h2>
                 <p className='article-reader-by-line'>
+                    <em>author:</em> {props.article.author}
+                    <br />
                     <em>{props.article.type}</em>
                     <br />
-                    <em>written by:</em> {props.article.author}
+                    {props.children}
                 </p>
             </div>
             <ReactQuill 
@@ -63,28 +74,20 @@ export function ArticleReader(props) {
 
 export function ArticleReaderModal(props) {
     
-    const modalTitle = props.modalTitle ? props.modalTitle : 'Article Reader'
-    
     return (
-        <Modal show={props.show} onHide={props.closeArticle} dialogClassName='article-reader-modal'>
-            <Modal.Header closeButton>
-                <Modal.Title>{modalTitle}</Modal.Title>
-            </Modal.Header>
-            
+        <Modal show={props.show} onHide={props.onHide} onExited={props.onExited} dialogClassName='article-reader-modal'>
             <Modal.Body>
-            
-                <ArticleReader article={props.article} />
-            
+                <ArticleReader article={props.article} children={props.children} />
             </Modal.Body>
       </Modal>
     )
 }
 
-export function ArticleList(props) {
+export function ArticleIndex(props) {
     return (
-        <Stack className='article-list' gap={props.gap ? props.gap : 0}>
+        <Stack className='article-index' gap={props.gap ? props.gap : 0}>
             {
-                props.articles.map((article, index) => <ArticleListItem key={index} 
+                props.index.map((article, index) => <ArticleIndexItem key={index} 
                                                                         theme={props.theme} 
                                                                         listIndex={index}
                                                                         onItemClick={props.onItemClick} 
@@ -94,20 +97,21 @@ export function ArticleList(props) {
     )
 }
 
-export function ArticleListItem(props) {
-    const defaultClass = 'article-list-item' 
-    const cardClass = props.theme ?  'article-list-item ' + props.theme : defaultClass
+export function ArticleIndexItem(props) {
+    const defaultClass = 'article-index-item' 
+    const cardClass = props.theme ?  'article-index-item ' + props.theme : defaultClass
     const clickHandler = (e) => {
         e.preventDefault()
         return props.onItemClick(props.listIndex)
     }
+    const meta = props.article.metadata
     return (
         <Card className={cardClass} onClick={clickHandler}>
             <Card.Body>
-                <Card.Subtitle className='article-list-item-title'>{props.article.title}</Card.Subtitle>
-                <Card.Subtitle className='article-list-item-subtitle'>{props.article.subTitle}</Card.Subtitle>
-                <Card.Text className='article-list-item-byline'>
-                    {props.article.type} written by {props.article.author}
+                <Card.Subtitle className='article-index-item-title'>{meta.title}</Card.Subtitle>
+                <Card.Subtitle className='article-index-item-subtitle'>{meta.sub_title}</Card.Subtitle>
+                <Card.Text className='article-index-item-byline'>
+                    {meta.type} written by {meta.author}
                 </Card.Text>
             </Card.Body>
         </Card>

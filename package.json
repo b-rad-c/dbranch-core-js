@@ -5,7 +5,7 @@
   "main": "./build/index.js",
   "scripts": {
     "build": "babel src -d build",
-    "prepare": "npm run build"
+    "watch": "fswatch -o src | (while read; do npm run build; done)"
   },
   "author": "B Rad C",
   "peerDependencies": {

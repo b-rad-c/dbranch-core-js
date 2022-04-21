@@ -7,6 +7,14 @@ import { Article } from './article';
 
 const utf8decoder = new TextDecoder()
 
+export async function loadFileFromIPFS(client, path) {
+    let result = ''
+    for await (const chunk of client.files.read(path)) {
+        result += utf8decoder.decode(chunk)
+    }
+    return result
+}
+
 export async function loadArticleFromIPFS(client, path) {
     let result = ''
     for await (const chunk of client.files.read(path)) {
