@@ -23,6 +23,9 @@
   "peerDependenciesMeta": {
     "axios": {
       "optional": true
+    },
+    "ipfs-http-client": {
+      "optional": true
     }
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Card, Stack } from 'react-bootstrap'
+import { Modal, Card, Stack, Row, Col } from 'react-bootstrap'
 import ReactQuill from 'react-quill'
 
 
@@ -46,18 +46,39 @@ export function CardanoExplorerLink(transactionId) {
 }
 
 export function ArticleReader(props) {
+
+    const meta = props.article.metadata
+    const record = props.article.record
+
+    const date_opts = { dateStyle: 'full', timeStyle: 'long' }
+    const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published)
+
+    const fieldClass = 'text-end col col-lg-2'
+    const valueClass = ''
     return (
         <div className='article-reader-container'>
             <div className='article-reader-header'>
-                <h1 className='article-reader-title'>{props.article.title}</h1>
-                <h2 className='article-reader-subtitle'>{props.article.subTitle}</h2>
-                <p className='article-reader-by-line'>
-                    <em>author:</em> {props.article.author}
-                    <br />
-                    <em>{props.article.type}</em>
-                    <br />
-                    {props.children}
-                </p>
+                <h1 className='article-reader-title'>{meta.title}</h1>
+                <h2 className='article-reader-subtitle'>{meta.sub_title}</h2>
+                <div className='article-reader-by-line'>
+                    <Row>
+                        <Col className={fieldClass}><strong>author</strong> ::</Col>
+                        <Col className={valueClass}>{meta.author}</Col>
+                    </Row>
+                    <Row>
+                        <Col className={fieldClass}><strong>published ::</strong></Col>
+                        <Col className={valueClass}>{date_published}</Col>
+                    </Row>
+                    <Row>
+                        <Col className={fieldClass}><strong>type ::</strong></Col>
+                        <Col className={valueClass}>{meta.type}</Col>
+                    </Row>
+                    <Row>
+                        <Col className={fieldClass}><strong>verify ::</strong></Col>
+                        <Col className={valueClass}>{props.children}</Col>
+                    </Row>
+                    
+                </div>
             </div>
             <ReactQuill 
                 className='article-reader-body'
@@ -81,10 +102,12 @@ export function ArticleReaderModal(props) {
 }
 
 export function ArticleIndex(props) {
+    const articles = props.index.articles
+    
     return (
         <Stack className='article-index' gap={props.gap ? props.gap : 0}>
             {
-                props.index.map((article, index) => <ArticleIndexItem key={index} 
+                articles.map((article, index) => <ArticleIndexItem key={index} 
                                                                         theme={props.theme} 
                                                                         listIndex={index}
                                                                         onItemClick={props.onItemClick} 
@@ -101,14 +124,21 @@ export function ArticleIndexItem(props) {
         e.preventDefault()
         return props.onItemClick(props.listIndex)
     }
+    
     const meta = props.article.metadata
+    const record = props.article.record
+
+    const date_opts = { dateStyle: 'medium', timeStyle: 'medium' }
+    const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published)
+
     return (
         <Card className={cardClass} onClick={clickHandler}>
             <Card.Body>
                 <Card.Subtitle className='article-index-item-title'>{meta.title}</Card.Subtitle>
                 <Card.Subtitle className='article-index-item-subtitle'>{meta.sub_title}</Card.Subtitle>
                 <Card.Text className='article-index-item-byline'>
-                    {meta.type} written by {meta.author}
+                    {meta.type} by {meta.author} <br />
+                    published: {date_published}
                 </Card.Text>
             </Card.Body>
         </Card>

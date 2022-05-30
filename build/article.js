@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Card, Stack } from 'react-bootstrap';
+import { Modal, Card, Stack, Row, Col } from 'react-bootstrap';
 import ReactQuill from 'react-quill';
 export class Article {
   constructor(type, title, subTitle, author, contents) {
@@ -43,17 +43,42 @@ export function CardanoExplorerLink(transactionId) {
   }
 }
 export function ArticleReader(props) {
+  const meta = props.article.metadata;
+  const record = props.article.record;
+  const date_opts = {
+    dateStyle: 'full',
+    timeStyle: 'long'
+  };
+  const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published);
+  const fieldClass = 'text-end col col-lg-2';
+  const valueClass = '';
   return /*#__PURE__*/React.createElement("div", {
     className: "article-reader-container"
   }, /*#__PURE__*/React.createElement("div", {
     className: "article-reader-header"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "article-reader-title"
-  }, props.article.title), /*#__PURE__*/React.createElement("h2", {
+  }, meta.title), /*#__PURE__*/React.createElement("h2", {
     className: "article-reader-subtitle"
-  }, props.article.subTitle), /*#__PURE__*/React.createElement("p", {
+  }, meta.sub_title), /*#__PURE__*/React.createElement("div", {
     className: "article-reader-by-line"
-  }, /*#__PURE__*/React.createElement("em", null, "author:"), " ", props.article.author, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, props.article.type), /*#__PURE__*/React.createElement("br", null), props.children)), /*#__PURE__*/React.createElement(ReactQuill, {
+  }, /*#__PURE__*/React.createElement(Row, null, /*#__PURE__*/React.createElement(Col, {
+    className: fieldClass
+  }, /*#__PURE__*/React.createElement("strong", null, "author"), " ::"), /*#__PURE__*/React.createElement(Col, {
+    className: valueClass
+  }, meta.author)), /*#__PURE__*/React.createElement(Row, null, /*#__PURE__*/React.createElement(Col, {
+    className: fieldClass
+  }, /*#__PURE__*/React.createElement("strong", null, "published ::")), /*#__PURE__*/React.createElement(Col, {
+    className: valueClass
+  }, date_published)), /*#__PURE__*/React.createElement(Row, null, /*#__PURE__*/React.createElement(Col, {
+    className: fieldClass
+  }, /*#__PURE__*/React.createElement("strong", null, "type ::")), /*#__PURE__*/React.createElement(Col, {
+    className: valueClass
+  }, meta.type)), /*#__PURE__*/React.createElement(Row, null, /*#__PURE__*/React.createElement(Col, {
+    className: fieldClass
+  }, /*#__PURE__*/React.createElement("strong", null, "verify ::")), /*#__PURE__*/React.createElement(Col, {
+    className: valueClass
+  }, props.children)))), /*#__PURE__*/React.createElement(ReactQuill, {
     className: "article-reader-body",
     theme: null,
     value: props.article.contents,
@@ -72,10 +97,11 @@ export function ArticleReaderModal(props) {
   })));
 }
 export function ArticleIndex(props) {
+  const articles = props.index.articles;
   return /*#__PURE__*/React.createElement(Stack, {
     className: "article-index",
     gap: props.gap ? props.gap : 0
-  }, props.index.map((article, index) => /*#__PURE__*/React.createElement(ArticleIndexItem, {
+  }, articles.map((article, index) => /*#__PURE__*/React.createElement(ArticleIndexItem, {
     key: index,
     theme: props.theme,
     listIndex: index,
@@ -93,6 +119,12 @@ export function ArticleIndexItem(props) {
   };
 
   const meta = props.article.metadata;
+  const record = props.article.record;
+  const date_opts = {
+    dateStyle: 'medium',
+    timeStyle: 'medium'
+  };
+  const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published);
   return /*#__PURE__*/React.createElement(Card, {
     className: cardClass,
     onClick: clickHandler
@@ -102,5 +134,5 @@ export function ArticleIndexItem(props) {
     className: "article-index-item-subtitle"
   }, meta.sub_title), /*#__PURE__*/React.createElement(Card.Text, {
     className: "article-index-item-byline"
-  }, meta.type, " written by ", meta.author)));
+  }, meta.type, " by ", meta.author, " ", /*#__PURE__*/React.createElement("br", null), "published: ", date_published)));
 }
