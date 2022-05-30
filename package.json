@@ -8,18 +8,21 @@
     "watch": "fswatch -o src | (while read; do npm run build; done)"
   },
   "author": "B Rad C",
-  "peerDependencies": {
-    "ipfs-http-client": "^56.0.1",
-    "react-bootstrap": "^2.2.1",
-    "react-dom": "^17.0.2",
-    "react-quill": "^2.0.0-beta.4"
-  },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.8",
     "@babel/preset-react": "^7.16.7"
   },
-  "dependencies": {
-    "axios": "^0.26.1"
+  "peerDependencies": {
+    "axios": "^0.27.2",
+    "ipfs-http-client": "^56.0.1",
+    "react-bootstrap": "^2.2.1",
+    "react-dom": "^17.0.2",
+    "react-quill": "^2.0.0-beta.4"
+  },
+  "peerDependenciesMeta": {
+    "axios": {
+      "optional": true
+    }
   }
 }

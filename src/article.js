@@ -3,9 +3,6 @@ import { Modal, Card, Stack } from 'react-bootstrap'
 import ReactQuill from 'react-quill'
 
 
-
-
-
 export class Article {
     constructor(type, title, subTitle, author, contents) {
         this.type = type ? type : 'news'
@@ -47,6 +44,7 @@ export function CardanoExplorerLink(transactionId) {
         return 'https://explorer.cardano.org/en/transaction?id=' + transactionId
     }
 }
+
 export function ArticleReader(props) {
     return (
         <div className='article-reader-container'>
@@ -70,7 +68,6 @@ export function ArticleReader(props) {
         </div>
     )
 }
-
 
 export function ArticleReaderModal(props) {
     

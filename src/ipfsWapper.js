@@ -1,4 +1,3 @@
-import { create } from 'ipfs-http-client'
 import { Article } from './article';
 
 //
