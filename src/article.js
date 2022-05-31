@@ -41,7 +41,8 @@ export function CardanoExplorerLink(transactionId) {
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
         return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
     } else {
-        return 'https://explorer.cardano.org/en/transaction?id=' + transactionId
+        // return 'https://explorer.cardano.org/en/transaction?id=' + transactionId
+        return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
     }
 }
 
@@ -120,13 +121,14 @@ export function ArticleIndex(props) {
 export function ArticleIndexItem(props) {
     const defaultClass = 'article-index-item' 
     const cardClass = props.theme ?  'article-index-item ' + props.theme : defaultClass
-    const clickHandler = (e) => {
-        e.preventDefault()
-        return props.onItemClick(props.listIndex)
-    }
     
     const meta = props.article.metadata
     const record = props.article.record
+
+    const clickHandler = (e) => {
+        e.preventDefault()
+        return props.onItemClick(record.name)
+    }
 
     const date_opts = { dateStyle: 'medium', timeStyle: 'medium' }
     const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published)
