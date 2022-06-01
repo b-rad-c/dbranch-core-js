@@ -127,7 +127,7 @@ export function ArticleIndexItem(props) {
 
     const clickHandler = (e) => {
         e.preventDefault()
-        return props.onItemClick(record.name)
+        return props.onItemClick(record)
     }
 
     const date_opts = { dateStyle: 'medium', timeStyle: 'medium' }
