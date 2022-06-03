@@ -1,5 +1,5 @@
-import { Article } from './article';
-
+import { newBlankArticle } from "./article"
+import { formatArticle } from "./api"
 //
 // ipfs helper functions
 //
@@ -14,12 +14,20 @@ export async function loadFileFromIPFS(client, path) {
     return result
 }
 
-export async function loadArticleFromIPFS(client, path) {
-    let result = ''
-    for await (const chunk of client.files.read(path)) {
-        result += utf8decoder.decode(chunk)
+export async function loadArticleFromIPFS(client, path, loadRecord) {
+    let article = newBlankArticle()
+
+    // load article
+    const data = await loadFileFromIPFS(client, path)
+    Object.assign(article, JSON.parse(data))
+
+    // load record if specified
+    if (loadRecord) {
+        article.record = JSON.parse(await loadFileFromIPFS(client, path + '.json'))
+        article = formatArticle(article)
     }
-    return Article.fromJSONString(result)
+
+    return article
 }
 
 export function formatPubSubMsg(response) {

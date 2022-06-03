@@ -2,49 +2,9 @@ import React from 'react'
 import { Modal, Card, Stack, Row, Col } from 'react-bootstrap'
 import ReactQuill from 'react-quill'
 
-
-export class Article {
-    constructor(type, title, subTitle, author, contents) {
-        this.type = type ? type : 'news'
-        this.title = title ? title : 'Untitled Article'
-        this.subTitle = subTitle ? subTitle : 'Enter subtitle here...'
-        this.author = author ? author : 'John Doe'
-        this.contents = contents ? contents : ''
-    }
-
-    toJSON() {
-        return {
-            metadata: {
-                type: this.type,
-                title: this.title,
-                sub_title: this.subTitle,
-                author: this.author,
-            },
-            contents: this.contents
-        }
-    }
-
-    toJSONString() {
-        return JSON.stringify(this.toJSON())
-    }
-
-    static fromJSON(data) {
-        return new Article(data.metadata.type, data.metadata.title, data.metadata.sub_title, data.metadata.author, data.contents)
-    }
-
-    static fromJSONString(jsonString) {
-        return Article.fromJSON(JSON.parse(jsonString))
-    }
-}
-
-export function CardanoExplorerLink(transactionId) {
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-        return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
-    } else {
-        // return 'https://explorer.cardano.org/en/transaction?id=' + transactionId
-        return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
-    }
-}
+//
+// react components
+//
 
 export function ArticleReader(props) {
 
@@ -52,10 +12,10 @@ export function ArticleReader(props) {
     const record = props.article.record
 
     const date_opts = { dateStyle: 'full', timeStyle: 'long' }
-    const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published)
 
     const fieldClass = 'text-end col col-lg-2'
     const valueClass = ''
+
     return (
         <div className='article-reader-container'>
             <div className='article-reader-header'>
@@ -68,7 +28,7 @@ export function ArticleReader(props) {
                     </Row>
                     <Row>
                         <Col className={fieldClass}><strong>published ::</strong></Col>
-                        <Col className={valueClass}>{date_published}</Col>
+                        <Col className={valueClass}>{displayPublishDate(record, date_opts, '-')}</Col>
                     </Row>
                     <Row>
                         <Col className={fieldClass}><strong>type ::</strong></Col>
@@ -94,9 +54,9 @@ export function ArticleReader(props) {
 export function ArticleReaderModal(props) {
     
     return (
-        <Modal show={props.show} onHide={props.onHide} onExited={props.onExited} dialogClassName='article-reader-modal'>
+        <Modal show={props.show} onHide={props.closeArticle} onExited={props.onExited} dialogClassName='article-reader-modal'>
             <Modal.Body>
-                <ArticleReader article={props.article} children={props.children} />
+                <ArticleReader article={props.article} record={props.record} children={props.children} />
             </Modal.Body>
       </Modal>
     )
@@ -131,7 +91,6 @@ export function ArticleIndexItem(props) {
     }
 
     const date_opts = { dateStyle: 'medium', timeStyle: 'medium' }
-    const date_published = new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published)
 
     return (
         <Card className={cardClass} onClick={clickHandler}>
@@ -140,9 +99,50 @@ export function ArticleIndexItem(props) {
                 <Card.Subtitle className='article-index-item-subtitle'>{meta.sub_title}</Card.Subtitle>
                 <Card.Text className='article-index-item-byline'>
                     {meta.type} by {meta.author} <br />
-                    published: {date_published}
+                    published: {displayPublishDate(record, date_opts, '-')}
                 </Card.Text>
             </Card.Body>
         </Card>
     )
+}
+
+//
+// helpers
+//
+
+export function newBlankArticle() {
+    return {
+        record: {
+            name: 'Untitled Article.news',
+            size: 0,
+            cid: '',
+            date_added: null,
+            date_published: null,
+            cardano_tx_hash: ''
+        },
+        metadata: {
+            type: 'news',
+            title: 'Untitled Article',
+            sub_title: 'A great article waiting to be written!',
+            author: 'Jonathan Doe'
+        },
+        contents: ''
+    }
+}
+
+export function CardanoExplorerLink(transactionId) {
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
+    } else {
+        // return 'https://explorer.cardano.org/en/transaction?id=' + transactionId
+        return 'https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=' + transactionId
+    }
+}
+
+function displayPublishDate(record, date_opts, defaultString) {
+    if(record.date_published) { 
+        return new Intl.DateTimeFormat('en-US', date_opts).format(record.date_published)
+    } else {
+        return defaultString
+    }
 }

@@ -1,6 +1,5 @@
 import axios from "axios";
-
-function formatArticle(article) {
+export function formatArticle(article) {
   article.record.date_added = new Date(article.record.date_added);
   article.record.date_published = new Date(article.record.date_published);
   return article;
