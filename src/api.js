@@ -7,11 +7,15 @@ export function formatArticle(article) {
 }
 
 function formatArticleIndex(index) {
-    let articles = []
-    index.articles.forEach(article => {
-        articles.push(formatArticle(article))
+    let curated = []
+    index.curated.forEach(article => {
+        curated.push(formatArticle(article))
     })
-    return {articles: articles}
+    let published = []
+    index.published.forEach(article => {
+        published.push(formatArticle(article))
+    })
+    return {curated: curated, published: published}
 }
 
 export class dBranchAPI {
@@ -36,11 +40,11 @@ export class dBranchAPI {
         })
     }
 
-    getArticle(name) {
+    getArticleByCid(cid) {
         return new Promise((resolve, reject) => {
-            axios.get(this.url_base + '/article/' + name)
+            axios.get(this.url_base + '/article/cid/' + cid)
                 .then(response => {
-                    resolve(formatArticle(response.data))
+                    resolve(response.data) // do not call formatArticle because this response will not have a record
                 })
                 .catch(error => {
                     reject(error)

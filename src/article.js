@@ -63,7 +63,7 @@ export function ArticleReaderModal(props) {
 }
 
 export function ArticleIndex(props) {
-    const articles = props.index.articles
+    const articles = props.index.curated.concat(props.index.published)
     
     return (
         <Stack className='article-index' gap={props.gap ? props.gap : 0}>
