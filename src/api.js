@@ -40,9 +40,9 @@ export class dBranchAPI {
         })
     }
 
-    getArticleByCid(cid) {
+    getArticleByCid(cid, load_record) {
         return new Promise((resolve, reject) => {
-            axios.get(this.url_base + '/article/cid/' + cid)
+            axios.get(this.url_base + '/article/cid/' + cid, {params: {load_record: load_record}})
                 .then(response => {
                     resolve(response.data) // do not call formatArticle because this response will not have a record
                 })
